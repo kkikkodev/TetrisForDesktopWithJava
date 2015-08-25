@@ -26,6 +26,7 @@ public class TetrisView extends JFrame {
 
 	private static final String TETRIS_BACKGROUND_MUSIC_FILE_NAME = ".\\res\\tetris_background_music.wav";
 
+	private long mCurrentTimeMilliSecond = 0;
 	private int mInitialSpeedLevel;
 	private Clip mSoundClip;
 	private TetrisManager mTetrisManager;
@@ -43,6 +44,7 @@ public class TetrisView extends JFrame {
 
 	public void start() {
 		mSoundClip.start();
+		mSoundClip.loop(Clip.LOOP_CONTINUOUSLY);
 		repaint();
 	}
 
@@ -71,9 +73,6 @@ public class TetrisView extends JFrame {
 		}
 		mTetrisManager.processDeletingLines();
 		repaint();
-		if (processType == Constant.ProcessType.AUTO) {
-			mTetrisManager.sleep();
-		}
 	}
 
 	public void end() {
@@ -123,20 +122,31 @@ public class TetrisView extends JFrame {
 			@Override
 			public void run() {
 				start();
-				mProcessType = Constant.ProcessType.AUTO;
-				mDirection = Constant.Direction.DOWN;
 				mGameStatus = Constant.GameStatus.PLAYING;
 				mIsKeyPressed = false;
 				while (mGameStatus != Constant.GameStatus.END) {
-					if (mIsKeyPressed) {
-						process(mProcessType, mDirection);
-						mIsKeyPressed = false;
-
-					} else {
-						mProcessType = Constant.ProcessType.AUTO;
-						mDirection = Constant.Direction.DOWN;
-						process(mProcessType, mDirection);
+					mProcessType = Constant.ProcessType.AUTO;
+					mDirection = Constant.Direction.DOWN;
+					mCurrentTimeMilliSecond = System.currentTimeMillis();
+					while (true) {
+						if (mIsKeyPressed) {
+							mIsKeyPressed = false;
+							break;
+						}
+						if (!mIsKeyPressed
+								&& System.currentTimeMillis()
+										- mCurrentTimeMilliSecond > getDownMilliSecond()) {
+							mProcessType = Constant.ProcessType.AUTO;
+							mDirection = Constant.Direction.DOWN;
+							break;
+						}
+						try {
+							Thread.sleep(1);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
+					process(mProcessType, mDirection);
 				}
 			}
 		}).start();
@@ -158,26 +168,20 @@ public class TetrisView extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				mIsKeyPressed = true;
-				switch (e.getKeyCode()) {
-				case Constant.KeyCode.UP:
+				if (e.getKeyCode() == Constant.KeyCode.UP) {
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.UP;
-					break;
-				case Constant.KeyCode.LEFT:
-					mProcessType = Constant.ProcessType.DIRECTION;
-					mDirection = Constant.Direction.LEFT;
-					break;
-				case Constant.KeyCode.RIGHT:
-					mProcessType = Constant.ProcessType.DIRECTION;
-					mDirection = Constant.Direction.RIGHT;
-					break;
-				case Constant.KeyCode.DOWN:
+				} else if (e.getKeyCode() == Constant.KeyCode.DOWN) {
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.DOWN;
-					break;
-				case Constant.KeyCode.SPACE_BAR:
+				} else if (e.getKeyCode() == Constant.KeyCode.LEFT) {
+					mProcessType = Constant.ProcessType.DIRECTION;
+					mDirection = Constant.Direction.LEFT;
+				} else if (e.getKeyCode() == Constant.KeyCode.RIGHT) {
+					mProcessType = Constant.ProcessType.DIRECTION;
+					mDirection = Constant.Direction.RIGHT;
+				} else if (e.getKeyCode() == Constant.KeyCode.SPACE_BAR) {
 					mProcessType = Constant.ProcessType.DIRECT_DOWN;
-					break;
 				}
 			}
 		});
@@ -188,5 +192,9 @@ public class TetrisView extends JFrame {
 				end();
 			}
 		});
+	}
+
+	public long getDownMilliSecond() {
+		return mTetrisManager.getDownMilliSecond();
 	}
 }

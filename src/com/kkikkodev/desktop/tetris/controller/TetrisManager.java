@@ -63,6 +63,10 @@ public class TetrisManager {
 		Constant.BoardType checkResult = checkValidPosition(direction);
 		if (checkResult == Constant.BoardType.EMPTY) {
 			mBlock.move(direction);
+			if (direction == Constant.Direction.UP) {
+				sleep();
+				mBlock.move(Constant.Direction.DOWN);
+			}
 		} else {
 			if (direction == Constant.Direction.UP) {
 				switch (checkResult) {
@@ -145,16 +149,8 @@ public class TetrisManager {
 	}
 
 	public void sleep() {
-		int milliSecond = INITIAL_SPEED;
-		for (int i = Constant.MIN_SPEED_LEVEL; i < mSpeedLevel; i++) {
-			if (i < Constant.MAX_SPEED_LEVEL / 2) {
-				milliSecond -= SPEED_LEVEL_OFFSET;
-			} else {
-				milliSecond -= (SPEED_LEVEL_OFFSET / 5);
-			}
-		}
 		try {
-			Thread.sleep(milliSecond);
+			Thread.sleep(getDownMilliSecond());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -326,5 +322,17 @@ public class TetrisManager {
 			}
 		}
 		mDeletedLineCount += indexes.size();
+	}
+
+	public long getDownMilliSecond() {
+		long milliSecond = INITIAL_SPEED;
+		for (int i = Constant.MIN_SPEED_LEVEL; i < mSpeedLevel; i++) {
+			if (i < Constant.MAX_SPEED_LEVEL / 2) {
+				milliSecond -= SPEED_LEVEL_OFFSET;
+			} else {
+				milliSecond -= (SPEED_LEVEL_OFFSET / 5);
+			}
+		}
+		return milliSecond;
 	}
 }
