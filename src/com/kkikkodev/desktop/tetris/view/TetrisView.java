@@ -43,6 +43,7 @@ public class TetrisView extends JFrame {
 
 	public void start() {
 		mSoundClip.start();
+		mSoundClip.loop(Clip.LOOP_CONTINUOUSLY);
 		repaint();
 	}
 
