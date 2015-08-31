@@ -13,3 +13,6 @@ tetris for desktop (OS : windows / IDE : Eclipse for Java Developers Luna versio
 - 블럭 내려오는 딜레이 방식을 프레임 단위로 쪼개는 방식으로 변경
 - 연속으로 키 누르고 있는 경우 버그 수정
 
+[ver 0.3 : https://youtu.be/rGFQFxrfOj4]
+- 블럭 타입 추가 및 색상 추가 (랜덤)
+- 속도 레벨 및 UI 변경
