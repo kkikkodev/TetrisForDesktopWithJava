@@ -124,10 +124,10 @@ public class TetrisView extends JFrame {
 				start();
 				mGameStatus = Constant.GameStatus.PLAYING;
 				mIsKeyPressed = false;
+				mCurrentTimeMilliSecond = System.currentTimeMillis();
 				while (mGameStatus != Constant.GameStatus.END) {
 					mProcessType = Constant.ProcessType.AUTO;
 					mDirection = Constant.Direction.DOWN;
-					mCurrentTimeMilliSecond = System.currentTimeMillis();
 					while (true) {
 						if (mIsKeyPressed) {
 							mIsKeyPressed = false;
@@ -138,6 +138,8 @@ public class TetrisView extends JFrame {
 										- mCurrentTimeMilliSecond > getDownMilliSecond()) {
 							mProcessType = Constant.ProcessType.AUTO;
 							mDirection = Constant.Direction.DOWN;
+							mCurrentTimeMilliSecond = System
+									.currentTimeMillis();
 							break;
 						}
 						try {
@@ -174,6 +176,7 @@ public class TetrisView extends JFrame {
 				} else if (e.getKeyCode() == Constant.KeyCode.DOWN) {
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.DOWN;
+					mCurrentTimeMilliSecond = System.currentTimeMillis();
 				} else if (e.getKeyCode() == Constant.KeyCode.LEFT) {
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.LEFT;
@@ -182,6 +185,7 @@ public class TetrisView extends JFrame {
 					mDirection = Constant.Direction.RIGHT;
 				} else if (e.getKeyCode() == Constant.KeyCode.SPACE_BAR) {
 					mProcessType = Constant.ProcessType.DIRECT_DOWN;
+					mCurrentTimeMilliSecond = System.currentTimeMillis();
 				}
 			}
 		});

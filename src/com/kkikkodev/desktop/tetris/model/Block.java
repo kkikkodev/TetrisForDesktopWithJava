@@ -8,18 +8,18 @@ import com.kkikkodev.desktop.tetris.constant.Constant;
 
 public class Block {
 
-	private static final int BLOCK_EXAMPLES_SIZE = 6;
+	private static final int BLOCK_EXAMPLES_SIZE = 7;
 	private static final int POSITIONS_SIZE = 4;
 	private static final Point BLOCK_EXAMPLES[][][] = {
 			{
 					{ new Point(0, 5), new Point(0, 6), new Point(0, 7),
 							new Point(0, 8) },
-					{ new Point(-2, 6), new Point(-1, 6), new Point(0, 6),
-							new Point(1, 6) },
+					{ new Point(-1, 6), new Point(0, 6), new Point(1, 6),
+							new Point(2, 6) },
 					{ new Point(0, 5), new Point(0, 6), new Point(0, 7),
 							new Point(0, 8) },
-					{ new Point(-2, 6), new Point(-1, 6), new Point(0, 6),
-							new Point(1, 6) } },
+					{ new Point(-1, 6), new Point(0, 6), new Point(1, 6),
+							new Point(2, 6) } },
 			{
 					{ new Point(0, 8), new Point(1, 6), new Point(1, 7),
 							new Point(1, 8) },
@@ -38,7 +38,6 @@ public class Block {
 							new Point(1, 7) },
 					{ new Point(-1, 6), new Point(0, 6), new Point(0, 7),
 							new Point(1, 7) } },
-
 			{
 					{ new Point(0, 6), new Point(0, 7), new Point(1, 7),
 							new Point(1, 8) },
@@ -47,6 +46,15 @@ public class Block {
 					{ new Point(0, 6), new Point(0, 7), new Point(1, 7),
 							new Point(1, 8) },
 					{ new Point(-1, 8), new Point(0, 8), new Point(0, 7),
+							new Point(1, 7) } },
+			{
+					{ new Point(0, 7), new Point(1, 6), new Point(1, 7),
+							new Point(1, 8) },
+					{ new Point(-1, 7), new Point(0, 7), new Point(0, 8),
+							new Point(1, 7) },
+					{ new Point(0, 6), new Point(0, 7), new Point(0, 8),
+							new Point(1, 7) },
+					{ new Point(-1, 7), new Point(0, 6), new Point(0, 7),
 							new Point(1, 7) } },
 			{
 					{ new Point(0, 6), new Point(1, 6), new Point(1, 7),
@@ -66,17 +74,18 @@ public class Block {
 							new Point(1, 7) },
 					{ new Point(0, 6), new Point(0, 7), new Point(1, 6),
 							new Point(1, 7) } } };
-
 	private Point mPositions[][];
 	private int mCurrent;
 	private int mNext;
 	private int mDirection;
+	private int mColor;
 
 	public Block() {
 		mPositions = new Point[POSITIONS_SIZE][POSITIONS_SIZE];
 		mCurrent = 0;
 		mNext = 0;
 		mDirection = Constant.Direction.UP;
+		mColor = 0;
 	}
 
 	public Block(Block block) {
@@ -93,6 +102,7 @@ public class Block {
 		}
 		mNext = new Random().nextInt(BLOCK_EXAMPLES_SIZE);
 		mDirection = Constant.Direction.UP;
+		mColor = new Random().nextInt(Constant.COLORS.length);
 	}
 
 	public void copyOf(Block src) {
@@ -124,8 +134,8 @@ public class Block {
 	}
 
 	public void printNext(Graphics graphics, int x, int y) {
-		graphics.drawString("Next block : ", x, y);
-		y += 50;
+		graphics.drawString("[Next block]", x, y);
+		y += 30;
 		switch (mNext) {
 		case 0:
 			graphics.drawString("бсбсбсбс", x, y);
@@ -148,11 +158,16 @@ public class Block {
 			graphics.drawString("   бсбс", x, y);
 			break;
 		case 4:
-			graphics.drawString("бс", x, y);
+			graphics.drawString("   бс", x, y);
 			y += 20;
 			graphics.drawString("бсбсбс", x, y);
 			break;
 		case 5:
+			graphics.drawString("бс", x, y);
+			y += 20;
+			graphics.drawString("бсбсбс", x, y);
+			break;
+		case 6:
 			graphics.drawString("бсбс", x, y);
 			y += 20;
 			graphics.drawString("бсбс", x, y);
@@ -190,6 +205,14 @@ public class Block {
 
 	public int getDirection() {
 		return mDirection;
+	}
+
+	public void setColor(int color) {
+		mColor = color;
+	}
+
+	public int getColor() {
+		return mColor;
 	}
 
 	private void moveToDown() {

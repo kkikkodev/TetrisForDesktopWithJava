@@ -1,5 +1,6 @@
 package com.kkikkodev.desktop.tetris.controller;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -15,8 +16,8 @@ public class TetrisManager {
 	private static final int POSITIONS_SIZE = 4;
 	private static final int BOARD_ROW_SIZE = 20;
 	private static final int BOARD_COL_SIZE = 14;
-	private static final int INITIAL_SPEED = 500;
-	private static final int SPEED_LEVEL_OFFSET = 90;
+	private static final int INITIAL_SPEED = 400;
+	private static final int SPEED_LEVEL_OFFSET = 50;
 	private static final int LEVEL_UP_CONDITION = 3;
 
 	private Constant.BoardType mBoard[][];
@@ -63,10 +64,6 @@ public class TetrisManager {
 		Constant.BoardType checkResult = checkValidPosition(direction);
 		if (checkResult == Constant.BoardType.EMPTY) {
 			mBlock.move(direction);
-			if (direction == Constant.Direction.UP) {
-				sleep();
-				mBlock.move(Constant.Direction.DOWN);
-			}
 		} else {
 			if (direction == Constant.Direction.UP) {
 				switch (checkResult) {
@@ -87,18 +84,6 @@ public class TetrisManager {
 					mBlock.move(tempDirection);
 				} while (checkValidPosition(direction) == tempCheckResult);
 				mBlock.move(direction);
-			} else {
-				if (direction == Constant.Direction.RIGHT
-						&& checkResult == Constant.BoardType.RIGHT_WALL
-						|| direction == Constant.Direction.LEFT
-						&& checkResult == Constant.BoardType.LEFT_WALL
-						|| direction == Constant.Direction.RIGHT
-						&& checkResult == Constant.BoardType.FIXED_BLOCK
-						|| direction == Constant.Direction.LEFT
-						&& checkResult == Constant.BoardType.FIXED_BLOCK) {
-					sleep();
-					mBlock.move(Constant.Direction.DOWN);
-				}
 			}
 		}
 		changeBoardByStatus(Constant.BoardType.MOVING_BLOCK);
@@ -179,10 +164,14 @@ public class TetrisManager {
 					graphics.drawString("  ", x, y);
 					break;
 				case MOVING_BLOCK:
+					graphics.setColor(Constant.COLORS[mBlock.getColor()]);
 					graphics.drawString("¡á", x, y);
+					graphics.setColor(Color.BLACK);
 					break;
 				case FIXED_BLOCK:
+					graphics.setColor(Color.DARK_GRAY);
 					graphics.drawString("¢Ê", x, y);
+					graphics.setColor(Color.BLACK);
 					break;
 				case LEFT_WALL:
 				case RIGHT_WALL:
@@ -198,17 +187,26 @@ public class TetrisManager {
 			y += 28;
 		}
 		x = 460;
-		y = 180;
+		y = 130;
 		Font font = graphics.getFont();
 		graphics.setFont(new Font(font.getName(), Font.BOLD, 20));
-		graphics.drawString("          ***** Tetris *****", x, y);
-		y += 50;
-		graphics.drawString("Current speed level : " + mSpeedLevel + " level",
-				x, y);
-		y += 50;
-		graphics.drawString("Deleted lines : " + mDeletedLineCount + " lines",
-				x, y);
-		mBlock.printNext(graphics, x, y + 100);
+		graphics.drawString("********* Tetris *********", x, y);
+		y += 30;
+		graphics.drawString("[" + mSpeedLevel + " level / " + mDeletedLineCount
+				+ " lines deleted]", x, y);
+		y += 80;
+		graphics.drawString("[Key Description]", x, y);
+		y += 30;
+		graphics.drawString("¡ç : move left", x, y);
+		y += 30;
+		graphics.drawString("¡æ : move right", x, y);
+		y += 30;
+		graphics.drawString("¡é : move down", x, y);
+		y += 30;
+		graphics.drawString("¡è : rotate", x, y);
+		y += 30;
+		graphics.drawString("SpaceBar : direct down", x, y);
+		mBlock.printNext(graphics, x, y + 80);
 	}
 
 	public void setBoard(Constant.BoardType[][] board) {

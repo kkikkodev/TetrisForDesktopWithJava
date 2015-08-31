@@ -1,5 +1,7 @@
 package com.kkikkodev.desktop.tetris.constant;
 
+import java.awt.Color;
+
 public interface Constant {
 
 	public enum GameStatus {
@@ -33,4 +35,9 @@ public interface Constant {
 
 	public static final int MAX_SPEED_LEVEL = 10;
 	public static final int MIN_SPEED_LEVEL = 1;
+
+	public static final Color[] COLORS = { Color.BLACK, Color.BLUE,
+			Color.GREEN, Color.RED, Color.YELLOW, Color.CYAN, Color.DARK_GRAY,
+			Color.GRAY, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE,
+			Color.PINK, Color.WHITE };
 }
