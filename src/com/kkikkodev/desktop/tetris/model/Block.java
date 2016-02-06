@@ -1,5 +1,6 @@
 package com.kkikkodev.desktop.tetris.model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Random;
@@ -136,43 +137,52 @@ public class Block {
 	public void printNext(Graphics graphics, int x, int y) {
 		graphics.drawString("[Next block]", x, y);
 		y += 30;
+		graphics.setColor(Color.LIGHT_GRAY);
 		switch (mNext) {
 		case 0:
-			graphics.drawString("бсбсбсбс", x, y);
-			y += 20;
-			graphics.drawString("        ", x, y);
+			graphics.fill3DRect(x, y, 20, 20, true);
+			graphics.fill3DRect(x + 20, y, 20, 20, true);
+			graphics.fill3DRect(x + 40, y, 20, 20, true);
+			graphics.fill3DRect(x + 60, y, 20, 20, true);
 			break;
 		case 1:
-			graphics.drawString("      бс", x, y);
-			y += 20;
-			graphics.drawString("бсбсбс", x, y);
+			graphics.fill3DRect(x + 40, y, 20, 20, true);
+			graphics.fill3DRect(x, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 40, y + 20, 20, 20, true);
 			break;
 		case 2:
-			graphics.drawString("   бсбс", x, y);
-			y += 20;
-			graphics.drawString("бсбс", x, y);
+			graphics.fill3DRect(x + 20, y, 20, 20, true);
+			graphics.fill3DRect(x + 40, y, 20, 20, true);
+			graphics.fill3DRect(x, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
 			break;
 		case 3:
-			graphics.drawString("бсбс", x, y);
-			y += 20;
-			graphics.drawString("   бсбс", x, y);
+			graphics.fill3DRect(x, y, 20, 20, true);
+			graphics.fill3DRect(x + 20, y, 20, 20, true);
+			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 40, y + 20, 20, 20, true);
 			break;
 		case 4:
-			graphics.drawString("   бс", x, y);
-			y += 20;
-			graphics.drawString("бсбсбс", x, y);
+			graphics.fill3DRect(x + 40, y, 20, 20, true);
+			graphics.fill3DRect(x, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 40, y + 20, 20, 20, true);
 			break;
 		case 5:
-			graphics.drawString("бс", x, y);
-			y += 20;
-			graphics.drawString("бсбсбс", x, y);
+			graphics.fill3DRect(x, y, 20, 20, true);
+			graphics.fill3DRect(x, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 40, y + 20, 20, 20, true);
 			break;
 		case 6:
-			graphics.drawString("бсбс", x, y);
-			y += 20;
-			graphics.drawString("бсбс", x, y);
+			graphics.fill3DRect(x, y, 20, 20, true);
+			graphics.fill3DRect(x + 20, y, 20, 20, true);
+			graphics.fill3DRect(x, y + 20, 20, 20, true);
+			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
 			break;
 		}
+		graphics.setColor(Color.BLACK);
 	}
 
 	public void setPositions(Point[][] positions) {

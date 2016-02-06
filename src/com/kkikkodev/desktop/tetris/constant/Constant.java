@@ -36,8 +36,8 @@ public interface Constant {
 	public static final int MAX_SPEED_LEVEL = 10;
 	public static final int MIN_SPEED_LEVEL = 1;
 
-	public static final Color[] COLORS = { Color.BLACK, Color.BLUE,
-			Color.GREEN, Color.RED, Color.YELLOW, Color.CYAN, Color.DARK_GRAY,
-			Color.GRAY, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE,
-			Color.PINK, Color.WHITE };
+	// rainbow 7 colors : red, orange, yellow, green, blue, indigo, purple
+	public static final Color[] COLORS = { Color.RED, Color.ORANGE,
+			Color.YELLOW, Color.GREEN, Color.BLUE, Color.decode("#4B0082"),
+			Color.decode("#800080") };
 }

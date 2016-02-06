@@ -143,48 +143,38 @@ public class TetrisManager {
 
 	public void print(Graphics graphics) {
 		int x;
-		int y = 56;
+		int y = 60;
 		for (int i = 0; i < BOARD_ROW_SIZE; i++) {
-			x = 6;
+			x = 30;
 			for (int j = 0; j < BOARD_COL_SIZE; j++) {
 				switch (mBoard[i][j]) {
 				case LEFT_TOP_EDGE:
-					graphics.drawString("¦Ç", x, y);
-					break;
 				case RIGHT_TOP_EDGE:
-					graphics.drawString("¦Á", x, y);
-					break;
 				case LEFT_BOTTOM_EDGE:
-					graphics.drawString("¦Å", x, y);
-					break;
 				case RIGHT_BOTTOM_EDGE:
-					graphics.drawString("¦Ã", x, y);
+				case LEFT_WALL:
+				case RIGHT_WALL:
+				case TOP_WALL:
+				case BOTTOM_WALL:
+					graphics.fill3DRect(x, y, 25, 25, true);
 					break;
 				case EMPTY:
-					graphics.drawString("  ", x, y);
+					graphics.draw3DRect(x, y, 25, 25, true);
 					break;
 				case MOVING_BLOCK:
 					graphics.setColor(Constant.COLORS[mBlock.getColor()]);
-					graphics.drawString("¡á", x, y);
+					graphics.fill3DRect(x, y, 25, 25, true);
 					graphics.setColor(Color.BLACK);
 					break;
 				case FIXED_BLOCK:
-					graphics.setColor(Color.DARK_GRAY);
-					graphics.drawString("¢Ê", x, y);
+					graphics.setColor(Color.GRAY);
+					graphics.fill3DRect(x, y, 25, 25, true);
 					graphics.setColor(Color.BLACK);
 					break;
-				case LEFT_WALL:
-				case RIGHT_WALL:
-					graphics.drawString("£ü", x, y);
-					break;
-				case TOP_WALL:
-				case BOTTOM_WALL:
-					graphics.drawString("¡ª", x, y);
-					break;
 				}
-				x += 28;
+				x += 25;
 			}
-			y += 28;
+			y += 25;
 		}
 		x = 460;
 		y = 130;
