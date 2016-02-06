@@ -169,21 +169,25 @@ public class TetrisView extends JFrame {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				mIsKeyPressed = true;
 				if (e.getKeyCode() == Constant.KeyCode.UP) {
+					mIsKeyPressed = true;
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.UP;
 				} else if (e.getKeyCode() == Constant.KeyCode.DOWN) {
+					mIsKeyPressed = true;
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.DOWN;
 					mCurrentTimeMilliSecond = System.currentTimeMillis();
 				} else if (e.getKeyCode() == Constant.KeyCode.LEFT) {
+					mIsKeyPressed = true;
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.LEFT;
 				} else if (e.getKeyCode() == Constant.KeyCode.RIGHT) {
+					mIsKeyPressed = true;
 					mProcessType = Constant.ProcessType.DIRECTION;
 					mDirection = Constant.Direction.RIGHT;
 				} else if (e.getKeyCode() == Constant.KeyCode.SPACE_BAR) {
+					mIsKeyPressed = true;
 					mProcessType = Constant.ProcessType.DIRECT_DOWN;
 					mCurrentTimeMilliSecond = System.currentTimeMillis();
 				}
