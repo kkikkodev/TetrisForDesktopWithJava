@@ -164,7 +164,7 @@ public class Block {
 			graphics.fill3DRect(x + 40, y + 20, 20, 20, true);
 			break;
 		case 4:
-			graphics.fill3DRect(x + 40, y, 20, 20, true);
+			graphics.fill3DRect(x + 20, y, 20, 20, true);
 			graphics.fill3DRect(x, y + 20, 20, 20, true);
 			graphics.fill3DRect(x + 20, y + 20, 20, 20, true);
 			graphics.fill3DRect(x + 40, y + 20, 20, 20, true);
