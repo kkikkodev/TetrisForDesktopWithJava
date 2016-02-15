@@ -27,8 +27,9 @@ public class TetrisView extends JFrame {
 	private final Object mMonitorObject = new Object(); // to pause <-> resume
 
 	private static final String TETRIS_BACKGROUND_MUSIC_FILE_NAME = ".\\res\\tetris_background_music.wav";
+	private static final int PROCESS_REACHED_CASE_COUNT = 2;
 
-	private long mCurrentTimeMilliSecond = 0;
+	private long mCurrentTimeMilliSecond;
 	private int mInitialSpeedLevel;
 	private Clip mSoundClip;
 	private TetrisManager mTetrisManager;
@@ -36,6 +37,9 @@ public class TetrisView extends JFrame {
 	private int mDirection;
 	private Constant.GameStatus mGameStatus;
 	private boolean mIsKeyPressed;
+	private int mProcessReachedCaseCount; // it is used to move left or right at
+											// bottom in case of space which you
+											// want to move is available
 
 	public TetrisView(int initialSpeedLevel) {
 		mInitialSpeedLevel = initialSpeedLevel;
@@ -59,18 +63,13 @@ public class TetrisView extends JFrame {
 			mTetrisManager.changeBoardByAuto();
 		}
 		if (mTetrisManager.isReachedToBottom()) {
-			if (processType == Constant.ProcessType.DIRECTION
-					&& direction == Constant.Direction.LEFT
-					&& (mTetrisManager
-							.checkValidPosition(Constant.Direction.LEFT) == Constant.BoardType.EMPTY)
-					|| processType == Constant.ProcessType.DIRECTION
-					&& direction == Constant.Direction.RIGHT
-					&& (mTetrisManager
-							.checkValidPosition(Constant.Direction.RIGHT) == Constant.BoardType.EMPTY)) {
-				mTetrisManager.changeBoardByDirection(direction);
-			}
-			if (mTetrisManager.processReachedCase() == Constant.GameStatus.END) {
-				end();
+			if (mProcessReachedCaseCount == PROCESS_REACHED_CASE_COUNT) {
+				if (mTetrisManager.processReachedCase() == Constant.GameStatus.END) {
+					end();
+				}
+				mProcessReachedCaseCount = 0;
+			} else {
+				mProcessReachedCaseCount++;
 			}
 		}
 		repaint();
