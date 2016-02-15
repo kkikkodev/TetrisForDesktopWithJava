@@ -24,6 +24,8 @@ import com.kkikkodev.desktop.tetris.util.ScreenUtil;
 
 public class TetrisView extends JFrame {
 
+	private final Object mMonitorObject = new Object(); // to pause <-> resume
+
 	private static final String TETRIS_BACKGROUND_MUSIC_FILE_NAME = ".\\res\\tetris_background_music.wav";
 
 	private long mCurrentTimeMilliSecond = 0;
@@ -71,8 +73,8 @@ public class TetrisView extends JFrame {
 				end();
 			}
 		}
-		mTetrisManager.processDeletingLines(getGraphics());
 		repaint();
+		mTetrisManager.processDeletingLines(getGraphics());
 	}
 
 	public void end() {
@@ -83,6 +85,19 @@ public class TetrisView extends JFrame {
 				+ mTetrisManager.getDeletedLineCount(), "TETRIS - END",
 				JOptionPane.PLAIN_MESSAGE);
 		dispose();
+	}
+
+	public void pause() {
+		mGameStatus = Constant.GameStatus.PAUSE;
+		mSoundClip.stop();
+		JOptionPane.showMessageDialog(null, "   확인을 누르면 게임이 계속 진행됩니다.",
+				"TETRIS - PAUSE", JOptionPane.PLAIN_MESSAGE);
+		mGameStatus = Constant.GameStatus.PLAYING;
+		synchronized (mMonitorObject) {
+			mMonitorObject.notifyAll();
+		}
+		mSoundClip.start();
+		mSoundClip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 
 	@Override
@@ -126,6 +141,15 @@ public class TetrisView extends JFrame {
 				mIsKeyPressed = false;
 				mCurrentTimeMilliSecond = System.currentTimeMillis();
 				while (mGameStatus != Constant.GameStatus.END) {
+					if (mGameStatus == Constant.GameStatus.PAUSE) {
+						synchronized (mMonitorObject) {
+							try {
+								mMonitorObject.wait();
+							} catch (InterruptedException e) {
+
+							}
+						}
+					}
 					mProcessType = Constant.ProcessType.AUTO;
 					mDirection = Constant.Direction.DOWN;
 					while (true) {
@@ -190,6 +214,11 @@ public class TetrisView extends JFrame {
 					mIsKeyPressed = true;
 					mProcessType = Constant.ProcessType.DIRECT_DOWN;
 					mCurrentTimeMilliSecond = System.currentTimeMillis();
+				} else if (e.getKeyCode() == Constant.KeyCode.ESC) {
+					mIsKeyPressed = true;
+					mProcessType = Constant.ProcessType.AUTO;
+					mCurrentTimeMilliSecond = System.currentTimeMillis();
+					pause();
 				}
 			}
 		});

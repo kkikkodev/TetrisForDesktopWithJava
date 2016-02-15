@@ -5,7 +5,7 @@ import java.awt.Color;
 public interface Constant {
 
 	public enum GameStatus {
-		PLAYING, END
+		PLAYING, END, PAUSE
 	}
 
 	public interface Direction {
@@ -27,6 +27,7 @@ public interface Constant {
 		public static final int RIGHT = 39;
 		public static final int DOWN = 40;
 		public static final int SPACE_BAR = 32;
+		public static final int ESC = 27;
 	}
 
 	public enum BoardType {
