@@ -71,7 +71,7 @@ public class TetrisView extends JFrame {
 				end();
 			}
 		}
-		mTetrisManager.processDeletingLines();
+		mTetrisManager.processDeletingLines(getGraphics());
 		repaint();
 	}
 

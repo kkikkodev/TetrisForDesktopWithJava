@@ -3,8 +3,12 @@ package com.kkikkodev.desktop.tetris.controller;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import javax.swing.Timer;
 
 import com.kkikkodev.desktop.tetris.constant.Constant;
 import com.kkikkodev.desktop.tetris.constant.Constant.BoardType;
@@ -19,11 +23,13 @@ public class TetrisManager {
 	private static final int INITIAL_SPEED = 400;
 	private static final int SPEED_LEVEL_OFFSET = 50;
 	private static final int LEVEL_UP_CONDITION = 3;
+	private static final int LINES_TO_DELETE_HIGHLIGHTING_MILLISECOND = 10;
 
 	private Constant.BoardType mBoard[][];
 	private Block mBlock;
 	private int mDeletedLineCount;
 	private int mSpeedLevel;
+	int mColorIndex = 0; // color array index to highlight deleting lines
 
 	public TetrisManager(int speedLevel) {
 		mBoard = new Constant.BoardType[BOARD_ROW_SIZE][BOARD_COL_SIZE];
@@ -99,10 +105,28 @@ public class TetrisManager {
 		}
 	}
 
-	public void processDeletingLines() {
+	public void processDeletingLines(Graphics g) {
+		Color highlightingColors[] = { Color.GRAY, Color.WHITE };
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
 		searchLineIndexesToDelete(indexes);
 		if (indexes.size() > 0) {
+			Timer timer = new Timer(LINES_TO_DELETE_HIGHLIGHTING_MILLISECOND,
+					new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							highlightLinesToDelete(g,
+									highlightingColors[mColorIndex], indexes);
+							mColorIndex = 1 - mColorIndex;
+						}
+					});
+			timer.start();
+			try {
+				Thread.sleep(LINES_TO_DELETE_HIGHLIGHTING_MILLISECOND * 40);
+			} catch (InterruptedException e1) {
+
+			}
+			timer.stop();
 			deleteLines(indexes);
 			for (int i = mSpeedLevel; i <= mDeletedLineCount
 					/ LEVEL_UP_CONDITION; i++) {
@@ -187,13 +211,13 @@ public class TetrisManager {
 		y += 80;
 		graphics.drawString("[Key Description]", x, y);
 		y += 30;
-		graphics.drawString("¡ç : move left", x, y);
+		graphics.drawString("â†: move left", x, y);
 		y += 30;
-		graphics.drawString("¡æ : move right", x, y);
+		graphics.drawString("â†’ : move right", x, y);
 		y += 30;
-		graphics.drawString("¡é : move down", x, y);
+		graphics.drawString("â†“ : move down", x, y);
 		y += 30;
-		graphics.drawString("¡è : rotate", x, y);
+		graphics.drawString("â†‘ : rotate", x, y);
 		y += 30;
 		graphics.drawString("SpaceBar : direct down", x, y);
 		mBlock.printNext(graphics, x, y + 80);
@@ -229,6 +253,18 @@ public class TetrisManager {
 
 	public int getSpeedLevel() {
 		return mSpeedLevel;
+	}
+
+	public long getDownMilliSecond() {
+		long milliSecond = INITIAL_SPEED;
+		for (int i = Constant.MIN_SPEED_LEVEL; i < mSpeedLevel; i++) {
+			if (i < Constant.MAX_SPEED_LEVEL / 2) {
+				milliSecond -= SPEED_LEVEL_OFFSET;
+			} else {
+				milliSecond -= (SPEED_LEVEL_OFFSET / 5);
+			}
+		}
+		return milliSecond;
 	}
 
 	private void clearBoard() {
@@ -312,15 +348,11 @@ public class TetrisManager {
 		mDeletedLineCount += indexes.size();
 	}
 
-	public long getDownMilliSecond() {
-		long milliSecond = INITIAL_SPEED;
-		for (int i = Constant.MIN_SPEED_LEVEL; i < mSpeedLevel; i++) {
-			if (i < Constant.MAX_SPEED_LEVEL / 2) {
-				milliSecond -= SPEED_LEVEL_OFFSET;
-			} else {
-				milliSecond -= (SPEED_LEVEL_OFFSET / 5);
-			}
-		}
-		return milliSecond;
+	private void highlightLinesToDelete(Graphics g, Color color,
+			ArrayList<Integer> indexes) {
+		g.setColor(color);
+		int x = 55;
+		int y = 60 + indexes.get(0) * 25;
+		g.fill3DRect(x, y, 25 * (BOARD_COL_SIZE - 2), 25 * indexes.size(), true);
 	}
 }
