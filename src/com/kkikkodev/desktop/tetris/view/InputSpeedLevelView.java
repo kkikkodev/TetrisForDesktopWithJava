@@ -52,6 +52,7 @@ public class InputSpeedLevelView extends JDialog {
 		getContentPane().add(mjsSpeedLevel);
 		mjbStart = new JButton("START");
 		mjbStart.setBounds(23, 122, 148, 40);
+		getRootPane().setDefaultButton(mjbStart); // set default focus
 		getContentPane().add(mjbStart);
 	}
 

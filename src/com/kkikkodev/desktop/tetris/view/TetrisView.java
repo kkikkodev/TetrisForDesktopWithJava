@@ -114,7 +114,7 @@ public class TetrisView extends JFrame {
 	private void initWholeSetting() {
 		setTitle("TETRIS - ING...");
 		getContentPane().setLayout(null);
-		setSize(800, 600);
+		setSize(800, 700);
 		setLocation(ScreenUtil.getCenterPosition(this));
 		setResizable(false);
 	}
