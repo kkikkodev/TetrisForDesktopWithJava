@@ -20,8 +20,8 @@ public class TetrisManager {
 	private static final int POSITIONS_SIZE = 4;
 	private static final int BOARD_ROW_SIZE = 24;
 	private static final int BOARD_COL_SIZE = 14;
-	private static final int INITIAL_SPEED = 400;
-	private static final int SPEED_LEVEL_OFFSET = 50;
+	private static final int INITIAL_SPEED = 300;
+	private static final int SPEED_LEVEL_OFFSET = 40;
 	private static final int LEVEL_UP_CONDITION = 3;
 	private static final int LINES_TO_DELETE_HIGHLIGHTING_MILLISECOND = 10;
 
