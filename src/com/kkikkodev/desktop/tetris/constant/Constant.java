@@ -34,6 +34,24 @@ public interface Constant {
 		EMPTY, MOVING_BLOCK, FIXED_BLOCK, LEFT_WALL, RIGHT_WALL, BOTTOM_WALL, TOP_WALL, LEFT_TOP_EDGE, RIGHT_TOP_EDGE, LEFT_BOTTOM_EDGE, RIGHT_BOTTOM_EDGE
 	}
 
+	public interface MainMenu {
+		public static final int START = 1;
+		public static final int RANKING = 2;
+		public static final int SETTING = 3;
+		public static final int EXIT = 4;
+	}
+
+	public interface PauseMenu {
+		public static final int RESUME = 1;
+		public static final int MAIN_MENU = 2;
+	}
+
+	public interface EndMenu {
+		public static final int RANKING = 1;
+		public static final int MAIN_MENU = 2;
+		public static final int EXIT = 3;
+	}
+
 	public static final int MAX_SPEED_LEVEL = 10;
 	public static final int MIN_SPEED_LEVEL = 1;
 
