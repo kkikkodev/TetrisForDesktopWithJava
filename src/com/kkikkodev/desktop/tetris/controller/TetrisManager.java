@@ -29,7 +29,8 @@ public class TetrisManager {
 	private Block mBlock;
 	private int mDeletedLineCount;
 	private int mSpeedLevel;
-	int mColorIndex = 0; // color array index to highlight deleting lines
+	private int mColorIndex = 0; // color array index to highlight deleting
+									// lines
 
 	public TetrisManager(int speedLevel) {
 		mBoard = new Constant.BoardType[BOARD_ROW_SIZE][BOARD_COL_SIZE];
@@ -55,8 +56,7 @@ public class TetrisManager {
 				return Constant.BoardType.TOP_WALL;
 			}
 
-			if (mBoard[x][y] != Constant.BoardType.EMPTY
-					&& mBoard[x][y] != Constant.BoardType.MOVING_BLOCK) {
+			if (!(mBoard[x][y] == Constant.BoardType.EMPTY || mBoard[x][y] == Constant.BoardType.MOVING_BLOCK)) {
 				return mBoard[x][y];
 			}
 		}
@@ -71,20 +71,17 @@ public class TetrisManager {
 		if (checkResult == Constant.BoardType.EMPTY) {
 			mBlock.move(direction);
 		} else {
-			if (direction == Constant.Direction.UP) {
-				switch (checkResult) {
-				case TOP_WALL:
+			if (direction == Constant.Direction.UP
+					&& checkResult != Constant.BoardType.FIXED_BLOCK) {
+				if (checkResult == Constant.BoardType.TOP_WALL) {
 					tempDirection = Constant.Direction.DOWN;
 					tempCheckResult = Constant.BoardType.TOP_WALL;
-					break;
-				case RIGHT_WALL:
+				} else if (checkResult == Constant.BoardType.RIGHT_WALL) {
 					tempDirection = Constant.Direction.LEFT;
 					tempCheckResult = Constant.BoardType.RIGHT_WALL;
-					break;
-				case LEFT_WALL:
+				} else if (checkResult == Constant.BoardType.LEFT_WALL) {
 					tempDirection = Constant.Direction.RIGHT;
 					tempCheckResult = Constant.BoardType.LEFT_WALL;
-					break;
 				}
 				do {
 					mBlock.move(tempDirection);
@@ -183,7 +180,6 @@ public class TetrisManager {
 					graphics.fill3DRect(x, y, 25, 25, true);
 					break;
 				case EMPTY:
-					graphics.draw3DRect(x, y, 25, 25, true);
 					break;
 				case MOVING_BLOCK:
 					graphics.setColor(Constant.COLORS[mBlock.getColor()]);
@@ -201,25 +197,43 @@ public class TetrisManager {
 			y += 25;
 		}
 		x = 460;
-		y = 130;
+		y = 150;
 		Font font = graphics.getFont();
 		graphics.setFont(new Font(font.getName(), Font.BOLD, 20));
-		graphics.drawString("********* Tetris *********", x, y);
-		y += 30;
 		graphics.drawString("[" + mSpeedLevel + " level / " + mDeletedLineCount
-				+ " lines deleted]", x, y);
+				+ " lines]", x, y);
 		y += 80;
 		graphics.drawString("[Key Description]", x, y);
 		y += 30;
-		graphics.drawString("←: move left", x, y);
+		graphics.drawString("←", x, y);
+		x = 560;
+		graphics.drawString(": move left", x, y);
+		x = 460;
 		y += 30;
-		graphics.drawString("→ : move right", x, y);
+		graphics.drawString("→", x, y);
+		x = 560;
+		graphics.drawString(": move right", x, y);
+		x = 460;
 		y += 30;
-		graphics.drawString("↓ : move down", x, y);
+		graphics.drawString("↓", x, y);
+		x = 560;
+		graphics.drawString(": move down", x, y);
+		x = 460;
 		y += 30;
-		graphics.drawString("↑ : rotate", x, y);
+		graphics.drawString("↑", x, y);
+		x = 560;
+		graphics.drawString(": rotate", x, y);
+		x = 460;
 		y += 30;
-		graphics.drawString("SpaceBar : direct down", x, y);
+		graphics.drawString("SpaceBar", x, y);
+		x = 560;
+		graphics.drawString(": direct down", x, y);
+		x = 460;
+		y += 30;
+		graphics.drawString("ESC", x, y);
+		x = 560;
+		graphics.drawString(": pause", x, y);
+		x = 460;
 		mBlock.printNext(graphics, x, y + 80);
 	}
 

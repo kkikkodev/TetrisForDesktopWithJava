@@ -16,7 +16,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import com.kkikkodev.desktop.tetris.constant.Constant;
 import com.kkikkodev.desktop.tetris.controller.TetrisManager;
@@ -30,7 +29,6 @@ public class TetrisView extends JFrame {
 	private static final int PROCESS_REACHED_CASE_COUNT = 2;
 
 	private long mCurrentTimeMilliSecond;
-	private int mInitialSpeedLevel;
 	private Clip mSoundClip;
 	private TetrisManager mTetrisManager;
 	private Constant.ProcessType mProcessType;
@@ -41,8 +39,7 @@ public class TetrisView extends JFrame {
 											// bottom in case of space which you
 											// want to move is available
 
-	public TetrisView(int initialSpeedLevel) {
-		mInitialSpeedLevel = initialSpeedLevel;
+	public TetrisView() {
 		initWholeSetting();
 		initMembers();
 		setEvents();
@@ -63,13 +60,26 @@ public class TetrisView extends JFrame {
 			mTetrisManager.changeBoardByAuto();
 		}
 		if (mTetrisManager.isReachedToBottom()) {
-			if (mProcessReachedCaseCount == PROCESS_REACHED_CASE_COUNT) {
+			if (processType == Constant.ProcessType.DIRECT_DOWN) {
+				mProcessReachedCaseCount = 0;
 				if (mTetrisManager.processReachedCase() == Constant.GameStatus.END) {
 					end();
+					new EndMenuPopup().setVisible(true);
+					return;
 				}
-				mProcessReachedCaseCount = 0;
 			} else {
-				mProcessReachedCaseCount++;
+				// if you are going to move the block which has bottom wall or
+				// bottom fixed block, permit the block to move the direction
+				if (mProcessReachedCaseCount == PROCESS_REACHED_CASE_COUNT) {
+					if (mTetrisManager.processReachedCase() == Constant.GameStatus.END) {
+						end();
+						new EndMenuPopup().setVisible(true);
+						return;
+					}
+					mProcessReachedCaseCount = 0;
+				} else {
+					mProcessReachedCaseCount++;
+				}
 			}
 		}
 		repaint();
@@ -79,24 +89,21 @@ public class TetrisView extends JFrame {
 	public void end() {
 		mGameStatus = Constant.GameStatus.END;
 		mSoundClip.stop();
-		JOptionPane.showMessageDialog(null, "               level : "
-				+ mTetrisManager.getSpeedLevel() + "          deleted lines : "
-				+ mTetrisManager.getDeletedLineCount(), "TETRIS - END",
-				JOptionPane.PLAIN_MESSAGE);
 		dispose();
 	}
 
 	public void pause() {
 		mGameStatus = Constant.GameStatus.PAUSE;
 		mSoundClip.stop();
-		JOptionPane.showMessageDialog(null, "   확인을 누르면 게임이 계속 진행됩니다.",
-				"TETRIS - PAUSE", JOptionPane.PLAIN_MESSAGE);
-		mGameStatus = Constant.GameStatus.PLAYING;
+		new PauseMenuPopup(this).setVisible(true);
 		synchronized (mMonitorObject) {
-			mMonitorObject.notifyAll();
+			mMonitorObject.notify();
 		}
-		mSoundClip.start();
-		mSoundClip.loop(Clip.LOOP_CONTINUOUSLY);
+		if (mGameStatus != Constant.GameStatus.END) {
+			mGameStatus = Constant.GameStatus.PLAYING;
+			mSoundClip.start();
+			mSoundClip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 	}
 
 	@Override
@@ -130,7 +137,7 @@ public class TetrisView extends JFrame {
 		} catch (UnsupportedAudioFileException uafe) {
 			uafe.printStackTrace();
 		}
-		mTetrisManager = new TetrisManager(mInitialSpeedLevel);
+		mTetrisManager = new TetrisManager(Constant.MIN_SPEED_LEVEL);
 		new Thread(new Runnable() {
 
 			@Override
